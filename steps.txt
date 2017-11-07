@@ -1,0 +1,49 @@
+AUTHENTICATION SETUP
+
+1. Install required packages:     
+    - jsonwebtoken
+    - hapi-auth-jwt2
+    - bcrypt-as-promised
+
+2. Add 'hapi-auth-jwt2' to index, and use as a plugin in server.register.   
+
+3. Modify 'api' plugin (api.js), and add auth scheme setup. Set default auth method.
+
+4. Add 'auth.mode' as 'optional' to each route config that we want public.
+
+5. Modify user model to include methods to: 
+    - generatePassword()
+        Method should generate a salt, then a hash, then update the
+        user with the hash value as the password field value.
+
+6. Modify user model to execute 'generatePassword()' before saving a new user.
+
+7. Improve signup/create user endpoint by first filtering by email to see if any 
+    other users have taken that email, throw error message if it is in use.
+
+8. Modify user model to include methods to: 
+    -comparePassword(password)
+        Method should compare password passed in as parameter to the password 
+        stored on the user with the bcrypt.compare() method. 
+        
+        If the result (result equals whether or not they are authenticated) 
+        of the compare is false, then return false. Otherwise, return the 
+        authenticated user.    
+
+9. Modify login endpoints to: 
+    - Filter through users to find the user with the login email.
+
+    - If there is a user, compare the login password by calling 
+    user.comparePassword(password), else if no user was found, throw an
+    error message: "Email and password combo stinks".
+
+    - If result of compare was successful, return the authenticated users, 
+    else throw an error message, "Email and password combo stinks".
+
+10. Modify user model to include methods to: 
+    - generateJWT(user)
+        Method will create a json web token using the 'jsonwebtoken' package
+        method 'jwt.sign(data, secretKey, optionsObject)'    
+
+11. Improve login to generate a json web token before sending the authenticated
+    user back in the http response.            
