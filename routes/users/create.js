@@ -6,6 +6,9 @@ module.exports = {
   // the request url used to access this endpoint
   // method and path belong together
   config: {
+    auth: {
+      mode: "optional"
+    },
     // setting for how the request is handled after being received
 
     // auth.mode - if set to optional, the route will be accesible
@@ -25,8 +28,12 @@ module.exports = {
       user
         .save()
         // saves the new user record to the database
-        .then(user => reply(user))
-        // sends the saved user record in the http response
+        .then(user => {
+          delete user.password;
+          reply(user);
+        })
+        // deletes password before sending the saved
+        // user record in the http response
         .catch(err => reply(err));
       // sends the error if one occured in the http response
     }

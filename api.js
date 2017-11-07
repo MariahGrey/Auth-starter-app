@@ -17,6 +17,27 @@ module.exports.register = (server, options, next) => {
   // next - a function that will move to execute the next plugin
   // in the array of plugins registered
 
+  server.auth.strategy("jwt", "jwt", {
+    // set authentication strategy to use JSON web tokens
+    // when a route has 'auth.mode' as optional,
+    // the server will look for an 'Authorization' header
+    // and use the key we define below to check its validity.
+
+    key: "supersecretsecret",
+    validateFunc: (decoded, request, callback) => {
+      if (!decoded.id) return callback(null, false);
+      else return callback(null, true);
+    },
+    verifyOptions: {
+      algorithms: ["HS256"]
+    }
+  });
+
+  server.auth.default({ strategy: "jwt" });
+  // multiple auth schemes can be set in one server/api
+  // here, we're setting the deault scheme to be used unless
+  // otheriwie specified per route.
+
   server.route(routes);
   // adds each route config as an API endpoint
   // endpoint - an address and method combo that will trigger

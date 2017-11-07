@@ -2,7 +2,7 @@ const thinky = require("thinky");
 // imports thinky to setup a database connection
 
 const db = thinky({
-  db: "firstAuthApi"
+  db: "authWalkThrough"
 });
 // builds and configures that database connection
 // and starts the connection (turns it on). this is
